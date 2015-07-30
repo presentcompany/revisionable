@@ -80,6 +80,10 @@ class ServiceProvider extends BaseProvider
                 $this->bindJwtAuthProvider();
                 break;
 
+            case 'sleepingowl':
+                $this->bindSleepingOwlProvider();
+                break;
+
             default:
                 $this->bindGuardProvider();
         }
@@ -138,6 +142,20 @@ class ServiceProvider extends BaseProvider
             $field = $app['config']->get('sofa_revisionable.userfield');
 
             return new \Sofa\Revisionable\Adapters\Guard($app['auth']->driver(), $field);
+        });
+    }
+
+    /**
+     * Bind adapter for Sleeping Owl to the IoC.
+     *
+     * @return void
+     */
+    protected function bindSleepingOwlProvider()
+    {
+
+        $this->app->bindShared('revisionable.userprovider', function ($app) {
+            $field = $app['config']->get('sofa_revisionable.userfield');
+            return new \Sofa\Revisionable\Adapters\SleepingOwl($app['admin.auth']->driver(), $field);
         });
     }
 
